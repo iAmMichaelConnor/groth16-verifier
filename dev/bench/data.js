@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1794415347684,
+  "lastUpdate": 1794415349184,
   "repoUrl": "https://github.com/iAmMichaelConnor/groth16-verifier",
   "entries": {
     "ACIR Opcodes": [
@@ -79,6 +79,87 @@ window.BENCHMARK_DATA = {
             "name": "sp1_verify/main",
             "value": 68308,
             "unit": "acir_opcodes"
+          }
+        ]
+      }
+    ],
+    "Circuit Size": [
+      {
+        "commit": {
+          "author": {
+            "email": "mike@aztec.foundation",
+            "name": "iAmMichaelConnor",
+            "username": "iAmMichaelConnor"
+          },
+          "committer": {
+            "email": "mike@aztec.foundation",
+            "name": "iAmMichaelConnor",
+            "username": "iAmMichaelConnor"
+          },
+          "distinct": true,
+          "id": "d7de998d5964a38520d37e942550fbb7866d577a",
+          "message": "test: benchmark fixed-key verification under a Circom key",
+          "timestamp": "2026-11-11T16:29:15Z",
+          "tree_id": "fb2bfe672a9b4bb9a09d7ee9b6a71edad5da8e7e",
+          "url": "https://github.com/iAmMichaelConnor/groth16-verifier/commit/d7de998d5964a38520d37e942550fbb7866d577a"
+        },
+        "date": 1794415349136,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "bn254_fp12_mul/main",
+            "value": 7883,
+            "unit": "circuit_size"
+          },
+          {
+            "name": "bn254_fp2_mul/main",
+            "value": 3118,
+            "unit": "circuit_size"
+          },
+          {
+            "name": "bn254_fp6_mul/main",
+            "value": 4367,
+            "unit": "circuit_size"
+          },
+          {
+            "name": "bn254_fp_mul/main",
+            "value": 2961,
+            "unit": "circuit_size"
+          },
+          {
+            "name": "bn254_g1_add/main",
+            "value": 7756,
+            "unit": "circuit_size"
+          },
+          {
+            "name": "bn254_g2_double/main",
+            "value": 5247,
+            "unit": "circuit_size"
+          },
+          {
+            "name": "groth16_verify_1/main",
+            "value": 188966,
+            "unit": "circuit_size"
+          },
+          {
+            "name": "runtime_verify_1/main",
+            "value": 438862,
+            "unit": "circuit_size"
+          },
+          {
+            "name": "runtime_verify_2/main",
+            "value": 491775,
+            "unit": "circuit_size"
+          },
+          {
+            "name": "sp1_v6_verify/main",
+            "value": 300213,
+            "unit": "circuit_size"
+          },
+          {
+            "name": "sp1_verify/main",
+            "value": 216777,
+            "unit": "circuit_size"
           }
         ]
       }
