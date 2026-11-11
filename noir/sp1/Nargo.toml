@@ -1,0 +1,9 @@
+[package]
+name = "sp1"
+type = "lib"
+authors = ["Michael Connor"]
+compiler_version = ">=1.0.0"
+
+[dependencies]
+groth16 = { path = "../groth16" }
+sha256 = { tag = "v0.3.0", git = "https://github.com/noir-lang/sha256" }

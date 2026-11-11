@@ -1,0 +1,21 @@
+{
+  "name": "groth16-verifier-hints-wasm",
+  "version": "0.1.0",
+  "private": true,
+  "license": "Apache-2.0",
+  "description": "Optional digest-pinned six-schema Groth16 hint WASM asset; no prover or implicit loading",
+  "exports": {
+    "./v1/manifest.json": "./v1/manifest.json",
+    "./v1/hints-kernel.wasm": "./v1/hints-kernel.wasm"
+  },
+  "files": [
+    "v1",
+    "source",
+    "provenance.json",
+    "rebuild.py",
+    "LICENSE"
+  ],
+  "scripts": {
+    "rebuild": "python3 rebuild.py"
+  }
+}

@@ -1,0 +1,10 @@
+[package]
+name = "runtime_key_schema"
+type = "lib"
+authors = ["Michael Connor"]
+compiler_version = ">=1.0.0"
+
+[dependencies]
+fields = { path = "../bn254_fields" }
+packing = { path = "../internal/transcript_packing" }
+poseidon = { tag = "v0.4.0", git = "https://github.com/noir-lang/poseidon" }

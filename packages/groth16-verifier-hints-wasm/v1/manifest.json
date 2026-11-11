@@ -1,0 +1,84 @@
+{
+  "schema": "groth16-verifier-hints-wasm-asset-v1",
+  "asset": "v1/hints-kernel.wasm",
+  "sha256": "7d26252af3c97a54b5a9f27f4ead6b7317ea0ca7b637d98affdd711f242dd2d0",
+  "bytes": 471268,
+  "abi": {
+    "magic": "G16H",
+    "version": 1,
+    "capabilityMask": 63,
+    "imports": []
+  },
+  "currentProfiles": [
+    "groth16-fixed-global68-v1",
+    "groth16-runtime-global68-v1"
+  ],
+  "schemas": [
+    {
+      "id": 1,
+      "name": "groth16-runtime-global66-v1",
+      "identities": 66,
+      "accumulators": 64,
+      "quotient": 188,
+      "domain": "406435817742925408890100530791791433588437037312",
+      "capsuleBase": "24225462540562475257521899389697148212224",
+      "inputBytes": 864,
+      "outputBytes": 32480
+    },
+    {
+      "id": 2,
+      "name": "groth16-fixed-global66-v1",
+      "identities": 66,
+      "accumulators": 64,
+      "quotient": 152,
+      "domain": "407173916385039488777917032230477238504980361472",
+      "capsuleBase": "5650673212468364081407241307973",
+      "inputBytes": 960,
+      "outputBytes": 31328
+    },
+    {
+      "id": 3,
+      "name": "groth16-runtime-global67-v1",
+      "identities": 67,
+      "accumulators": 65,
+      "quotient": 115,
+      "domain": "26636177751600359597021628385971156694668806978941184",
+      "capsuleBase": "1587639913058302378476955198405453961769867264",
+      "inputBytes": 864,
+      "outputBytes": 30528
+    },
+    {
+      "id": 4,
+      "name": "groth16-fixed-global67-v1",
+      "identities": 67,
+      "accumulators": 65,
+      "quotient": 108,
+      "domain": "406435817740251192357087807242550169024528265472",
+      "capsuleBase": "24269456647934883164209699852734152267313",
+      "inputBytes": 960,
+      "outputBytes": 30304
+    },
+    {
+      "id": 5,
+      "name": "groth16-fixed-global68-v1",
+      "identities": 68,
+      "accumulators": 66,
+      "quotient": 76,
+      "domain": "1587639913047856220144874247109043781673300224",
+      "capsuleBase": "26684549784209947936732584589688115243075714754238001",
+      "inputBytes": 960,
+      "outputBytes": 29664
+    },
+    {
+      "id": 6,
+      "name": "groth16-runtime-global68-v1",
+      "identities": 68,
+      "accumulators": 66,
+      "quotient": 94,
+      "domain": "406435817742925408890100530792079663938818945280",
+      "capsuleBase": "24225462540562475257521899389748553272320",
+      "inputBytes": 864,
+      "outputBytes": 30240
+    }
+  ]
+}

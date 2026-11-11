@@ -1,0 +1,107 @@
+groth16-verifier
+Copyright 2026 Michael Connor
+
+This repository contains code and data derived from third-party projects.
+
+noir/internal/bignum
+  A modified copy of noir-lang/noir-bignum v0.11.0 (commit
+  c2767065cc9012e1b6201edec14acc92cb2a4a68),
+  https://github.com/noir-lang/noir-bignum, Apache-2.0 (see LICENSE).
+  Changes: exact three-limb equality and inequality checks, tightened
+  quadratic-expression hint validation, the narrow-tail and fixed-bias carry
+  specialisations described in docs/OPTIMISATIONS.md, added tests, and the
+  upstream benchmark module removed.
+
+noir/internal/bigcurve_fixed, noir/internal/bigcurve_runtime_signed
+  Two modified copies of noir-lang/noir_bigcurve at commit
+  da39a08d8999f56cf5631f61ae9ffc06dd0302b9,
+  https://github.com/noir-lang/noir_bigcurve. Changes common to both include
+  a distinct-x guard in incomplete addition, corrected add_with_hint operand
+  signs, additional tests and the upstream benchmark module removed (the
+  sources are the record of every change). bigcurve_fixed adds the
+  selected-offset fixed-base MSM used by noir/groth16;
+  bigcurve_runtime_signed adds the signed MSM used by the runtime-key
+  verifier.
+  Apache-2.0 (see LICENSE). The copied revision predates the upstream licence
+  file, which was added in commit 04b663b.
+
+noir/bn254_fields, noir/bn254_g1, noir/bn254_g2, noir/bn254_pairing,
+noir/groth16/src/types.nr, noir/sp1/src/inputs.nr,
+packages/groth16-verifier-hints/python/groth16/_pairing.py,
+packages/groth16-verifier-sp1/python/sp1.py
+  Adapted from bankaixyz/noir_groth16 at commit
+  8d7f4702c0a63a4fae02cef215a0b75257bf933f,
+  https://github.com/bankaixyz/noir_groth16.
+  LICENCE STATUS: bankaixyz/noir_groth16 carries no licence file, and GitHub
+  reports no licence for it (checked 2026-11-10; that commit is still its
+  HEAD).
+
+fixtures/sp1-v5/groth16_vk.bin
+  The SP1 v5.0.0 Groth16 verification key from succinctlabs/sp1,
+  crates/verifier/bn254-vk/groth16_vk.bin, https://github.com/succinctlabs/sp1
+  (MIT OR Apache-2.0). Key data, not code.
+
+fixtures/sp1-v6/groth16_vk.bin, fixtures/sp1-v6/verifier_vks.bin
+  The SP1 v6 Groth16 verification key and recursion verification-key data
+  (circuit version v6.1.0) from succinctlabs/sp1 v6.10.0 (commit
+  d83ed91f96701209613720708f36ffce0e98ed33),
+  crates/verifier/vk-artifacts/groth16_vk.bin and verifier_vks.bin,
+  https://github.com/succinctlabs/sp1 (MIT OR Apache-2.0). Key data, not code.
+
+fixtures/sp1-v6/groth16_vk_v6.0.0.bin
+  The SP1 v6.0.0 Groth16 verification key (circuit version v6.0.0) from
+  succinctlabs/sp1 v6.0.0 (commit f87f8d6ff005d542db22e241928319f5e96a4609),
+  crates/verifier/vk-artifacts/groth16_vk.bin,
+  https://github.com/succinctlabs/sp1 (MIT OR Apache-2.0). Key data, used
+  only by a test.
+
+fixtures/sp1-v6/multiply.json
+  An SP1 v6 Groth16 proof, its public values and program key, from
+  input-output-hk/plutus-groth16-wrapper at commit
+  79233435095a7411e566b264be3827acb288d520,
+  tools/sp1-v6-hello-world/fixtures,
+  https://github.com/input-output-hk/plutus-groth16-wrapper, Apache-2.0.
+  Test data, re-encoded as JSON.
+
+fixtures/sp1-v6/clock.json
+  An SP1 v6 Groth16 proof, its public values and program key, from
+  keep-starknet-strange/garaga at commit
+  0509ebfb7966d03da8135b21287372d74214071e,
+  hydra/garaga/starknet/groth16_contract_generator/examples/proof_sp1.json,
+  https://github.com/keep-starknet-strange/garaga, which took it from
+  Arcora-labs/arcora-perp. MIT License, Copyright (c) 2026 Arcora Labs (the
+  permission notice is reproduced below). Test data.
+
+fixtures/sp1-v6/fibonacci-v6.0.0.json
+  An SP1 v6.0.0 Groth16 proof, its public values and program key, from
+  succinctlabs/sp1-project-template at commit
+  d1b0924587efd7f4b6c2797d6fdd8282da71d088,
+  contracts/src/fixtures/groth16-fixture.json,
+  https://github.com/succinctlabs/sp1-project-template. MIT License,
+  Copyright (c) 2024 Succinct Labs (the permission notice is reproduced
+  below). Test data.
+
+fixtures/multiplier
+  A test-only Circom circuit, development trusted setup and proof, produced
+  with circom 2.2.3 and snarkjs 0.7.6. Neither tool is part of this
+  repository or needed to use or test it.
+
+MIT permission notice for the files above that are under the MIT License:
+
+  Permission is hereby granted, free of charge, to any person obtaining a copy
+  of this software and associated documentation files (the "Software"), to
+  deal in the Software without restriction, including without limitation the
+  rights to use, copy, modify, merge, publish, distribute, sublicense, and/or
+  sell copies of the Software, and to permit persons to whom the Software is
+  furnished to do so, subject to the following conditions:
+
+  The above copyright notice and this permission notice shall be included in
+  all copies or substantial portions of the Software.
+
+  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+  FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
+  IN THE SOFTWARE.

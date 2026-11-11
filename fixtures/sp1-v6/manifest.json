@@ -1,0 +1,73 @@
+{
+  "protocol": "groth16",
+  "curve": "bn254",
+  "circuit": "SP1 v6 Groth16 wrapper, SP1 circuit version v6.1.0",
+  "sp1Releases": "v6.1.0 to v6.10.0 (groth16_vk.bin and verifier_vks.bin are identical at every tag in that range; v6.0.0 to v6.0.2 use a different key and root)",
+  "publicInputs": [
+    "program vkey hash",
+    "SHA-256(public values) with the top three bits cleared",
+    "exit code",
+    "recursion verification-key root",
+    "proof nonce"
+  ],
+  "proofEncoding": "SP1 onchain bytes: sha256(groth16_vk.bin)[0..4], then exit code, vk root and proof nonce as 32-byte big-endian words, then A.x, A.y, B.x1, B.x0, B.y1, B.y0, C.x, C.y as 32-byte big-endian words (356 bytes)",
+  "files": {
+    "groth16_vk.bin": {
+      "sha256": "4388a21c687fdd5f218d7e3d13190cac4c5355818d3605fd5fb811df468ee696",
+      "source": "https://github.com/succinctlabs/sp1",
+      "tag": "v6.10.0",
+      "commit": "d83ed91f96701209613720708f36ffce0e98ed33",
+      "path": "crates/verifier/vk-artifacts/groth16_vk.bin",
+      "licence": "MIT OR Apache-2.0"
+    },
+    "verifier_vks.bin": {
+      "sha256": "5842a30c4ac86a634c7fb4597ccde6bb5917f53c3de6f98b3c046d64cec777ad",
+      "source": "https://github.com/succinctlabs/sp1",
+      "tag": "v6.10.0",
+      "commit": "d83ed91f96701209613720708f36ffce0e98ed33",
+      "path": "crates/verifier/vk-artifacts/verifier_vks.bin",
+      "licence": "MIT OR Apache-2.0",
+      "vkRoot": "0x002f850ee998974d6cc00e50cd0814b098c05bfade466d28573240d057f25352"
+    },
+    "groth16_vk_v6.0.0.bin": {
+      "sha256": "0e78f4db7a6771a3a6a7d9c3b0de6fe73d58781368967a7fe84d87aefffec896",
+      "source": "https://github.com/succinctlabs/sp1",
+      "tag": "v6.0.0",
+      "commit": "f87f8d6ff005d542db22e241928319f5e96a4609",
+      "path": "crates/verifier/vk-artifacts/groth16_vk.bin",
+      "licence": "MIT OR Apache-2.0",
+      "use": "test only: the SP1 circuit version v6.0.0 key (SP1 v6.0.0 to v6.0.2), under which fibonacci-v6.0.0.json verifies; no verifier pins it"
+    },
+    "multiply.json": {
+      "sha256": "a22d1f3c71f976c75474d86b8c5a05423c50ee4e469ceb7afec31542f384f47b",
+      "program": "multiply(17, 23), public values 0x8701000000000000",
+      "producer": "SP1 SDK 6.2.4, local CPU prover",
+      "source": "https://github.com/input-output-hk/plutus-groth16-wrapper",
+      "commit": "79233435095a7411e566b264be3827acb288d520",
+      "path": "tools/sp1-v6-hello-world/fixtures (proof_bytes.bin, public_values.bin, manifest.json sp1_vkey_hash)",
+      "proofSha256": "5c61a4c8cec2e1c17fa1ecac6679ea53c8028f15248c60266e618afad171aee3",
+      "publicValuesSha256": "d58d1c3fd0cc8ce7e60acf1061ced1fc20c65942109a601c4bb7cbf693c464fe",
+      "licence": "Apache-2.0"
+    },
+    "clock.json": {
+      "sha256": "d9920e2875863a23893f1ea2e232ee697305c3b6fafdfd34e6def68a352cd71a",
+      "program": "Arcora clock package, 32 bytes of public values",
+      "producer": "SP1 SDK 6.1.0",
+      "source": "https://github.com/keep-starknet-strange/garaga",
+      "commit": "0509ebfb7966d03da8135b21287372d74214071e",
+      "path": "hydra/garaga/starknet/groth16_contract_generator/examples/proof_sp1.json (from Arcora-labs/arcora-perp bb166930ac88f65537adc48bee4ffaf09d629d62, contracts/integration/fixtures/clock-pkg3-verified)",
+      "proofSha256": "28d6804949242eac9a44e0d90542674a4e3325c15fbac30f258215505e6084db",
+      "publicValuesSha256": "c1a0fba57e708158aad9667fa00b3dc979322310e3925b9140eb1be05d27d454",
+      "licence": "MIT, Copyright (c) 2026 Arcora Labs"
+    },
+    "fibonacci-v6.0.0.json": {
+      "sha256": "3cba1f316a5470714f847c2ca417e3995d860d8097d9627e96da4b40c1adc6d4",
+      "program": "Fibonacci, n = 20",
+      "producer": "SP1 SDK 6.0.1; SP1 circuit version v6.0.0 (key 0e78f4db..., vk root 0x008cd56e...), so the v6.1.0 verifier must reject it",
+      "source": "https://github.com/succinctlabs/sp1-project-template",
+      "commit": "d1b0924587efd7f4b6c2797d6fdd8282da71d088",
+      "path": "contracts/src/fixtures/groth16-fixture.json",
+      "licence": "MIT, Copyright (c) 2024 Succinct Labs"
+    }
+  }
+}

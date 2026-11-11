@@ -1,0 +1,73 @@
+{
+  "name": "groth16-verifier-hints",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "license": "Apache-2.0",
+  "description": "Profile-bound BN254 Groth16 hint preparation for pinned Aztec v6 verifiers",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    },
+    "./wasm": {
+      "types": "./dist/wasm.d.ts",
+      "import": "./dist/wasm.js"
+    },
+    "./fixed": {
+      "types": "./dist/fixed.d.ts",
+      "import": "./dist/fixed.js"
+    },
+    "./current": {
+      "types": "./dist/current.d.ts",
+      "import": "./dist/current.js"
+    },
+    "./wasm-assets": {
+      "types": "./dist/wasm-assets.d.ts",
+      "import": "./dist/wasm-assets.js"
+    },
+    "./aztec": {
+      "types": "./dist/aztec.d.ts",
+      "import": "./dist/aztec.js"
+    },
+    "./producer": {
+      "types": "./dist/producer.d.ts",
+      "import": "./dist/producer.js"
+    },
+    "./worker": {
+      "types": "./dist/worker.d.ts",
+      "import": "./dist/worker.js"
+    },
+    "./worker-handler": {
+      "types": "./dist/worker-handler.d.ts",
+      "import": "./dist/worker-handler.js"
+    },
+    "./transcript": {
+      "types": "./dist/transcript.d.ts",
+      "import": "./dist/transcript.js"
+    }
+  },
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
+  "dependencies": {
+    "@noble/curves": "1.7.0",
+    "@noble/hashes": "1.6.0"
+  },
+  "scripts": {
+    "test": "npm run test:fast",
+    "build": "node scripts/build.mjs",
+    "check:dist": "node scripts/check-dist.mjs",
+    "test:distribution": "node --test test/distribution.test.mjs",
+    "prepack": "npm run build",
+    "test:fast": "node --test test/current.test.mjs test/aztec.test.mjs test/producer.test.mjs test/package.test.mjs test/distribution.test.mjs test/fixed.test.mjs test/worker.test.mjs",
+    "test:all": "node --test --test-concurrency=1 test/*.test.mjs",
+    "test:worker": "node --test test/worker.test.mjs",
+    "test:wasm": "node --test test/wasm-assets.test.mjs test/wasm-versioned.test.mjs"
+  },
+  "devDependencies": {
+    "typescript": "6.0.3"
+  }
+}

@@ -1,0 +1,12 @@
+[package]
+name = "runtime_pairing"
+type = "lib"
+authors = ["Michael Connor"]
+compiler_version = ">=1.0.0"
+
+[dependencies]
+fields = { path = "../../bn254_fields" }
+g1 = { path = "../g1_pairing_compat" }
+g2 = { path = "../../bn254_g2" }
+pairing_checks = { path = "../../bn254_pairing_checks" }
+bignum = { path = "../bignum" }

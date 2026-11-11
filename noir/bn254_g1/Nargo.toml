@@ -1,0 +1,10 @@
+[package]
+name = "bn254_g1"
+type = "lib"
+authors = ["Michael Connor"]
+compiler_version = ">=1.0.0"
+
+[dependencies]
+fields = { path = "../bn254_fields" }
+bigcurve = { path = "../internal/bigcurve_fixed" }
+bignum = { path = "../internal/bignum" }

@@ -1,0 +1,9 @@
+[package]
+name = "runtime_api_typecheck"
+type = "lib"
+authors = ["Michael Connor"]
+compiler_version = ">=1.0.0"
+
+[dependencies]
+verifier = { path = "../../noir/runtime_verifier" }
+schema = { path = "../../noir/runtime_key_schema" }

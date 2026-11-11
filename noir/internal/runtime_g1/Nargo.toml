@@ -1,0 +1,11 @@
+[package]
+name = "runtime_g1"
+type = "lib"
+authors = ["Michael Connor"]
+compiler_version = ">=1.0.0"
+
+[dependencies]
+bignum = { path = "../bignum" }
+bigcurve = { path = "../bigcurve_runtime_signed" }
+fields = { path = "../../bn254_fields" }
+schema = { path = "../../runtime_key_schema" }

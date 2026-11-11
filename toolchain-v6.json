@@ -1,0 +1,38 @@
+{
+  "aztecPackages": {
+    "branch": "v6",
+    "tag": "v6.0.0",
+    "commit": "0219f11d8133970df3974fe5ae65e006bf8c193a",
+    "url": "https://github.com/AztecProtocol/aztec-packages.git"
+  },
+  "noir": {
+    "gitlink": "5a7ee9bf5ed8973076df7bb0d2b723024db09ae7",
+    "sha256": "764b4fc1b27c8dad8a107043f915fe1b2cccc3184284ea00f31e9b390633d6f5"
+  },
+  "noirAlternatives": [
+    {
+      "version": "1.0.0",
+      "gitlink": "275d3ab1a5c916c6ea73e8d6b943f685f574500c",
+      "sha256": "30707a7f7b372413a07c54a6376ac408418b4453901b3c479d3590eb1ec47842",
+      "note": "Noir 1.0.0, which this repository's CI and benchmarks use; same bb 6.0.0 backend. Aztec v6 consumers use the noir entry above."
+    }
+  ],
+  "labs": {
+    "tag": "v6.0.0",
+    "gitlink": "d2e67c1d938f06a6476dd7d4bd01e73771923dd1",
+    "url": "https://github.com/aztec-labs-eng/aztec-node.git",
+    "note": "Labs v6.0.0 tag commit, the aztec-nr that the generated Aztec contracts use."
+  },
+  "backends": {
+    "stock-v6": {
+      "modes": [
+        "private",
+        "offchain"
+      ],
+      "aztecCommit": "0219f11d8133970df3974fe5ae65e006bf8c193a",
+      "binarySha256": "5bbb64800d431c6760a70d8723be4eaf37ed10e8fbfe2842bb85b8436180c130",
+      "reportedVersion": "6.0.0",
+      "provisioning": "bb 6.0.0 release (bbup -v 6.0.0, or @aztec-foundation/bb.js 6.0.0)"
+    }
+  }
+}

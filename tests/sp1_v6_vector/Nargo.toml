@@ -1,0 +1,9 @@
+[package]
+name = "sp1_v6_vector"
+type = "lib"
+authors = ["Michael Connor"]
+compiler_version = ">=1.0.0"
+
+[dependencies]
+groth16 = { path = "../../noir/groth16" }
+sp1 = { path = "../../noir/sp1" }

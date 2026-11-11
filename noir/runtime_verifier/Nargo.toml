@@ -1,0 +1,10 @@
+[package]
+name = "runtime_verifier"
+type = "lib"
+authors = ["Michael Connor"]
+compiler_version = ">=1.0.0"
+
+[dependencies]
+schema = { path = "../runtime_key_schema" }
+g1 = { path = "../internal/runtime_g1" }
+pairing = { path = "../internal/runtime_pairing" }

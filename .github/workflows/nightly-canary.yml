@@ -1,0 +1,186 @@
+name: Noir Nightly Canary
+
+on:
+  schedule:
+    # Run a check at 9 AM UTC
+    - cron: "0 9 * * *"
+  workflow_dispatch:
+    inputs:
+      heavy:
+        description: Also run the heavy constrained proof-vector tests and the hint-guard probe
+        type: boolean
+        default: false
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+env:
+  CARGO_TERM_COLOR: always
+  # The slow mode uses the latest release, not nightly, so that a compiler regression and a library regression are
+  # reported apart.
+  SLOW_MODE_NOIR_VERSION: 1.0.0
+
+jobs:
+  # The pull-request tests (test.yml) on Noir nightly.
+  test:
+    name: Test ${{ matrix.package }} on Nargo nightly
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    permissions:
+      contents: read
+      issues: write
+    strategy:
+      fail-fast: false
+      matrix:
+        package:
+          - bn254_fields
+          - bn254_fields_slow_tests
+          - bn254_g1
+          - bn254_g2
+          - bn254_pairing
+          - runtime_key_schema
+          - sp1
+          - bignum
+          - fixed_g1_helpers
+          - runtime_g1
+          - transcript_packing
+          - fixed_multiplier_vector
+          - runtime_multiplier_vector
+          - sp1_v6_vector
+        include:
+          - package: bignum
+            constrained: true
+    steps:
+      - name: Checkout sources
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Install Nargo
+        uses: noir-lang/noirup@bedac8fbe6a059177c35e565f9f76db54a795976 # v0.1.5
+        with:
+          toolchain: nightly
+
+      - name: Run tests
+        if: ${{ !matrix.constrained }}
+        run: nargo test --force-brillig --inliner-aggressiveness 0 --package ${{ matrix.package }} --test-threads 4
+
+      - name: Run tests constrained
+        if: ${{ matrix.constrained }}
+        run: nargo test --package ${{ matrix.package }} --test-threads 4
+
+      - name: Open an issue on failure
+        if: ${{ failure() }}
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_REPO: ${{ github.repository }}
+          WORKFLOW_NAME: ${{ github.workflow }}
+          WORKFLOW_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+          TEMPLATE: .github/NIGHTLY_CANARY_DIED.md
+        # The template's title and body; an open issue with that title is updated instead of opening another.
+        run: |
+          TITLE=$(sed -n 's/^title: "\(.*\)"$/\1/p' "$TEMPLATE")
+          export TITLE
+          body=$(awk 'n >= 2; /^---$/ { n++ }' "$TEMPLATE")
+          body=${body//'{{env.WORKFLOW_NAME}}'/"$WORKFLOW_NAME"}
+          body=${body//'{{env.WORKFLOW_URL}}'/"$WORKFLOW_URL"}
+          number=$(gh issue list --state open --search "in:title \"$TITLE\"" --json number,title --jq '[.[] | select(.title == env.TITLE)][0].number // empty')
+          if [ -n "$number" ]; then
+            gh issue edit "$number" --body "$body"
+          else
+            gh issue create --title "$TITLE" --body "$body"
+          fi
+
+  # Each package constrained, one job per package, with the thread count and timeout CONTRIBUTING.md#tests gives.
+  # One thread for the package whose single test needs most of a hosted runner's 16 GB. Where `args` is set, it
+  # narrows the run: `nightly::` runs only the package's `nightly` module (one test per stage; the pull-request run
+  # executes all of them), and `--no-fuzz` skips the random-input tests. Those are unconstrained, and compiling them
+  # without `--inliner-aggressiveness 0` is slow, which is also why `bn254_pairing`, whose tests are all
+  # unconstrained, is not here. `fixed_multiplier_vector` and `sp1_v6_vector` are in the `heavy` job, which no
+  # schedule runs.
+  slow-mode:
+    name: Slow mode (${{ matrix.package }})
+    runs-on: ubuntu-latest
+    timeout-minutes: ${{ matrix.timeout }}
+    permissions:
+      contents: read
+      issues: write
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - { package: bn254_fields, threads: 4, timeout: 30, args: '--no-fuzz' }
+          - { package: bn254_fields_slow_tests, threads: 1, timeout: 60 }
+          - { package: bn254_g1, threads: 4, timeout: 30 }
+          - { package: bn254_g2, threads: 4, timeout: 30 }
+          - { package: runtime_key_schema, threads: 4, timeout: 30 }
+          - { package: sp1, threads: 4, timeout: 30, args: 'nightly::' }
+          - { package: bignum, threads: 4, timeout: 30 }
+          - { package: bigcurve_fixed, threads: 4, timeout: 60 }
+          - { package: bigcurve_runtime_signed, threads: 4, timeout: 60 }
+          - { package: fixed_g1_helpers, threads: 4, timeout: 30 }
+          - { package: runtime_g1, threads: 4, timeout: 30 }
+          - { package: transcript_packing, threads: 4, timeout: 30 }
+          - { package: runtime_multiplier_vector, threads: 4, timeout: 30, args: 'nightly::' }
+    steps:
+      - name: Checkout sources
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Install Nargo
+        uses: noir-lang/noirup@bedac8fbe6a059177c35e565f9f76db54a795976 # v0.1.5
+        with:
+          toolchain: ${{ env.SLOW_MODE_NOIR_VERSION }}
+
+      - name: Run tests constrained
+        run: nargo test --package ${{ matrix.package }} --test-threads ${{ matrix.threads }} ${{ matrix.args }}
+
+      - name: Open an issue on failure
+        if: ${{ failure() }}
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_REPO: ${{ github.repository }}
+          WORKFLOW_NAME: ${{ github.workflow }}
+          WORKFLOW_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+          TEMPLATE: .github/SLOW_MODE_FAILED.md
+        # The template's title and body; an open issue with that title is updated instead of opening another.
+        run: |
+          TITLE=$(sed -n 's/^title: "\(.*\)"$/\1/p' "$TEMPLATE")
+          export TITLE
+          body=$(awk 'n >= 2; /^---$/ { n++ }' "$TEMPLATE")
+          body=${body//'{{env.WORKFLOW_NAME}}'/"$WORKFLOW_NAME"}
+          body=${body//'{{env.WORKFLOW_URL}}'/"$WORKFLOW_URL"}
+          number=$(gh issue list --state open --search "in:title \"$TITLE\"" --json number,title --jq '[.[] | select(.title == env.TITLE)][0].number // empty')
+          if [ -n "$number" ]; then
+            gh issue edit "$number" --body "$body"
+          else
+            gh issue create --title "$TITLE" --body "$body"
+          fi
+
+  # Opt-in only (Run workflow, with `heavy` ticked): the constrained proof-vector tests whose single test needs
+  # most of a hosted runner's 16 GB, and the hint-guard probe, which reruns the honest proof and the pairing-stage
+  # rejections without the Brillig hint's self-check.
+  heavy:
+    name: Heavy (${{ matrix.name }})
+    if: ${{ github.event_name == 'workflow_dispatch' && inputs.heavy }}
+    runs-on: ubuntu-latest
+    timeout-minutes: ${{ matrix.timeout }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - { name: fixed_multiplier_vector, timeout: 30, run: "nargo test --package fixed_multiplier_vector --test-threads 1 nightly::" }
+          - { name: sp1_v6_vector, timeout: 30, run: "nargo test --package sp1_v6_vector --test-threads 1 nightly::" }
+          - { name: hint-guard probe, timeout: 60, run: "python3 -B -m unittest discover -s scripts/tests -p 'heavy_*.py'" }
+    steps:
+      - name: Checkout sources
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Install Nargo
+        uses: noir-lang/noirup@bedac8fbe6a059177c35e565f9f76db54a795976 # v0.1.5
+        with:
+          toolchain: ${{ env.SLOW_MODE_NOIR_VERSION }}
+
+      - name: Run
+        run: ${{ matrix.run }}

@@ -1,0 +1,31 @@
+{
+  "name": "groth16-verifier-sp1",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "license": "Apache-2.0",
+  "description": "Pinned SP1 v5 and v6 integration using the generic Groth16 hint SDK",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
+  "dependencies": {
+    "@noble/hashes": "1.6.0",
+    "groth16-verifier-hints": "file:../groth16-verifier-hints"
+  },
+  "devDependencies": {
+    "typescript": "6.0.3"
+  },
+  "scripts": {
+    "build": "node scripts/build.mjs",
+    "test": "node --test test/*.test.mjs",
+    "prepack": "npm run build"
+  }
+}

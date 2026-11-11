@@ -1,0 +1,11 @@
+{
+  "name": "bn254-oracle-tests",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "license": "Apache-2.0",
+  "description": "Reference oracle for the BN254 differential tests",
+  "dependencies": {
+    "@noble/curves": "1.7.0"
+  }
+}

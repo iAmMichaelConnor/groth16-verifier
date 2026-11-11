@@ -1,0 +1,9 @@
+[package]
+name = "bn254_g2"
+type = "lib"
+authors = ["Michael Connor"]
+compiler_version = ">=1.0.0"
+
+[dependencies]
+fields = { path = "../bn254_fields" }
+bignum = { path = "../internal/bignum" }

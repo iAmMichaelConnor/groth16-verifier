@@ -1,0 +1,8 @@
+[package]
+name = "runtime_multiplier_vector"
+type = "lib"
+authors = ["Michael Connor"]
+compiler_version = ">=1.0.0"
+
+[dependencies]
+verifier = { path = "../../noir/runtime_verifier" }

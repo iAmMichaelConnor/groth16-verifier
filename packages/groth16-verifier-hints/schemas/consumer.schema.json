@@ -1,0 +1,31 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Groth16 Aztec consumer configuration v2",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema", "name", "mode", "keyPolicy", "inputCount", "certificate", "keyHash", "configurationHash", "statementSchema", "toolchain", "domain"],
+  "properties": {
+    "schema": {"const": "groth16-verifier-profile-v2"},
+    "name": {"type": "string", "pattern": "^[a-z][a-z0-9_]{0,63}$"},
+    "mode": {"enum": ["private", "offchain"]},
+    "keyPolicy": {"enum": ["fixed", "runtime"]},
+    "inputCount": {"type": "integer", "minimum": 0, "maximum": 256},
+    "certificate": {"enum": ["groth16-fixed-global68-v1", "groth16-runtime-global68-v1"]},
+    "keyHash": {"type": "string", "pattern": "^(0|[1-9][0-9]*)$", "description": "Canonical decimal BN254 Fr; runtime validator also checks the modulus."},
+    "configurationHash": {"type": ["string", "null"], "pattern": "^(0|[1-9][0-9]*)$"},
+    "statementSchema": {"const": "groth16-verifier-statement-v1"},
+    "domain": {"const": "finite-pairing-operands-v1"},
+    "toolchain": {
+      "type": "object", "additionalProperties": false,
+      "required": ["aztecCommit", "noirCommit", "backend"],
+      "properties": {
+        "aztecCommit": {"const": "0219f11d8133970df3974fe5ae65e006bf8c193a", "description": "Exact Aztec source of the declared backend: the v6.0.0 release 0219f11d."},
+        "noirCommit": {"const": "5a7ee9bf5ed8973076df7bb0d2b723024db09ae7"},
+        "backend": {"const": "stock-v6"}
+      }
+    }
+  },
+  "allOf": [
+    {"if": {"properties": {"keyPolicy": {"const": "fixed"}}}, "then": {"properties": {"certificate": {"const": "groth16-fixed-global68-v1"}, "configurationHash": {"type": "string"}}}, "else": {"properties": {"certificate": {"const": "groth16-runtime-global68-v1"}, "configurationHash": {"type": "null"}}}}
+  ]
+}

@@ -1,0 +1,59 @@
+{
+  "release-type": "simple",
+  "bump-minor-pre-major": true,
+  "bump-patch-for-minor-pre-major": true,
+  "pull-request-title-pattern": "chore: Release ${version}",
+  "group-pull-request-title-pattern": "chore: Release ${version}",
+  "packages": {
+    ".": {
+      "release-type": "simple",
+      "include-component-in-tag": false,
+      "initial-version": "0.1.0",
+      "extra-files": [
+        {
+          "type": "json",
+          "path": "packages/groth16-verifier-hints/package.json",
+          "jsonpath": "$.version"
+        },
+        {
+          "type": "json",
+          "path": "packages/groth16-verifier-hints-wasm/package.json",
+          "jsonpath": "$.version"
+        },
+        {
+          "type": "json",
+          "path": "packages/groth16-verifier-sp1/package.json",
+          "jsonpath": "$.version"
+        },
+        {
+          "type": "json",
+          "path": "packages/groth16-verifier-hints/package-lock.json",
+          "jsonpath": "$.version"
+        },
+        {
+          "type": "json",
+          "path": "packages/groth16-verifier-hints/package-lock.json",
+          "jsonpath": "$.packages[''].version"
+        },
+        {
+          "type": "json",
+          "path": "packages/groth16-verifier-sp1/package-lock.json",
+          "jsonpath": "$.version"
+        },
+        {
+          "type": "json",
+          "path": "packages/groth16-verifier-sp1/package-lock.json",
+          "jsonpath": "$.packages[''].version"
+        },
+        {
+          "type": "json",
+          "path": "packages/groth16-verifier-sp1/package-lock.json",
+          "jsonpath": "$.packages['../groth16-verifier-hints'].version"
+        }
+      ]
+    }
+  },
+  "plugins": [
+    "sentence-case"
+  ]
+}

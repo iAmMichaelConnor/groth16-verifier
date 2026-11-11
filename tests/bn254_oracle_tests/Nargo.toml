@@ -1,0 +1,8 @@
+[package]
+name = "bn254_oracle_tests"
+type = "lib"
+authors = ["Michael Connor"]
+compiler_version = ">=1.0.0"
+
+[dependencies]
+bn254_pairing = { path = "../../noir/bn254_pairing" }

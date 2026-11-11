@@ -1,0 +1,62 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Groth16 compiled artifact identities v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "profileSha256",
+    "artifacts"
+  ],
+  "properties": {
+    "schema": {
+      "const": "groth16-verifier-artifacts-v1"
+    },
+    "profileSha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "artifacts": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 2,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "role",
+          "artifactSha256",
+          "bytecodeSha256",
+          "verificationKeySha256"
+        ],
+        "properties": {
+          "role": {
+            "enum": [
+              "private-consumer",
+              "producer"
+            ]
+          },
+          "artifactSha256": {
+            "type": "string",
+            "pattern": "^[0-9a-f]{64}$"
+          },
+          "bytecodeSha256": {
+            "type": "string",
+            "pattern": "^[0-9a-f]{64}$"
+          },
+          "verificationKeySha256": {
+            "anyOf": [
+              {
+                "type": "string",
+                "pattern": "^[0-9a-f]{64}$"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        }
+      }
+    }
+  }
+}

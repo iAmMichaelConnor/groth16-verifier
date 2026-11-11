@@ -1,0 +1,279 @@
+use crate::fp::{curve_b, Fp, fp_eight, fp_four, fp_one, fp_three, fp_two, fp_zero};
+
+/// G1 affine point over Fp.
+pub struct G1Affine {
+    pub x: Fp,
+    pub y: Fp,
+}
+
+/// G1 Jacobian point (X:Y:Z) representing (X/Z^2, Y/Z^3).
+pub struct G1Jac {
+    pub x: Fp,
+    pub y: Fp,
+    pub z: Fp,
+}
+
+/// Affine point at infinity (0, 0).
+pub fn g1_affine_infinity() -> G1Affine {
+    G1Affine { x: fp_zero(), y: fp_zero() }
+}
+
+/// Jacobian point at infinity (1, 1, 0).
+pub fn g1_jacobian_infinity() -> G1Jac {
+    G1Jac { x: fp_one(), y: fp_one(), z: fp_zero() }
+}
+
+impl G1Affine {
+    pub fn is_infinity(self) -> bool {
+        let x_zero = self.x == fp_zero();
+        let y_zero = self.y == fp_zero();
+        x_zero & y_zero
+    }
+}
+
+impl G1Jac {
+    pub fn is_infinity(self) -> bool {
+        self.z == fp_zero()
+    }
+}
+
+/// Check y^2 = x^3 + b for affine points, treating infinity as valid.
+pub fn is_on_curve_g1_affine(p: G1Affine) -> bool {
+    let left = p.y * p.y;
+    let right = (p.x * p.x * p.x) + curve_b();
+    if p.is_infinity() {
+        true
+    } else {
+        left == right
+    }
+}
+
+/// Affine negation: (x, y) -> (x, -y).
+pub fn neg_g1_affine(p: G1Affine) -> G1Affine {
+    G1Affine { x: p.x, y: -p.y }
+}
+
+/// Convert Jacobian to affine with a single inversion.
+pub fn jacobian_to_affine_g1(p: G1Jac) -> G1Affine {
+    if p.is_infinity() {
+        g1_affine_infinity()
+    } else {
+        let a = fp_one() / p.z;
+        let b = a * a;
+        let x = p.x * b;
+        let y = p.y * b * a;
+        G1Affine { x, y }
+    }
+}
+
+/// Affine addition with special-case handling for infinity and doubling.
+pub fn add_g1_affine(a: G1Affine, b: G1Affine) -> G1Affine {
+    if a.is_infinity() {
+        b
+    } else if b.is_infinity() {
+        a
+    } else if a.x == b.x {
+        if a.y == b.y {
+            jacobian_to_affine_g1(double_mixed_g1(a))
+        } else {
+            g1_affine_infinity()
+        }
+    } else {
+        let h = b.x - a.x;
+        let hh = h * h;
+        let i = fp_four() * hh;
+        let j = h * i;
+        let r = fp_two() * (b.y - a.y);
+        let v = a.x * i;
+
+        let x3 = r * r - j - fp_two() * v;
+        let y3 = r * (v - x3) - fp_two() * a.y * j;
+        let z3 = fp_two() * h;
+
+        jacobian_to_affine_g1(G1Jac { x: x3, y: y3, z: z3 })
+    }
+}
+
+/// Mixed-coordinate doubling (affine input, Jacobian output).
+pub fn double_mixed_g1(a: G1Affine) -> G1Jac {
+    let xx = a.x * a.x;
+    let yy = a.y * a.y;
+    let yyyy = yy * yy;
+    let s = fp_two() * ((a.x + yy) * (a.x + yy) - xx - yyyy);
+    let m = fp_three() * xx;
+    let t = m * m - fp_two() * s;
+
+    let x3 = t;
+    let y3 = m * (s - t) - fp_eight() * yyyy;
+    let z3 = fp_two() * a.y;
+    G1Jac { x: x3, y: y3, z: z3 }
+}
+
+/// Jacobian addition with no inversions (complete with special cases).
+pub fn add_g1_jac(p: G1Jac, q: G1Jac) -> G1Jac {
+    if p.is_infinity() {
+        q
+    } else if q.is_infinity() {
+        p
+    } else {
+        let z1z1 = q.z * q.z;
+        let z2z2 = p.z * p.z;
+        let u1 = q.x * z2z2;
+        let u2 = p.x * z1z1;
+        let s1 = q.y * p.z * z2z2;
+        let s2 = p.y * q.z * z1z1;
+        let same_u = u1 == u2;
+        let same_s = s1 == s2;
+
+        if same_u & same_s {
+            double_g1_jac(p)
+        } else {
+            let h = u2 - u1;
+            let i = fp_two() * h;
+            let i = i * i;
+            let j = h * i;
+            let r = fp_two() * (s2 - s1);
+            let v = u1 * i;
+
+            let x3 = r * r - j - fp_two() * v;
+            let y3 = r * (v - x3) - fp_two() * s1 * j;
+            let z3 = ((p.z + q.z) * (p.z + q.z) - z1z1 - z2z2) * h;
+            G1Jac { x: x3, y: y3, z: z3 }
+        }
+    }
+}
+
+/// Mixed Jacobian + affine addition to save a field multiplication.
+pub fn add_g1_jac_mixed(p: G1Jac, q: G1Affine) -> G1Jac {
+    if p.is_infinity() {
+        if q.is_infinity() {
+            g1_jacobian_infinity()
+        } else {
+            G1Jac { x: q.x, y: q.y, z: fp_one() }
+        }
+    } else if q.is_infinity() {
+        p
+    } else {
+        let z2z2 = p.z * p.z;
+        let u1 = q.x * z2z2;
+        let s1 = q.y * p.z * z2z2;
+        let u2 = p.x;
+        let s2 = p.y;
+        let same_u = u1 == u2;
+        let same_s = s1 == s2;
+
+        if same_u & same_s {
+            double_g1_jac(p)
+        } else {
+            let h = u2 - u1;
+            let i = fp_two() * h;
+            let i = i * i;
+            let j = h * i;
+            let r = fp_two() * (s2 - s1);
+            let v = u1 * i;
+
+            let x3 = r * r - j - fp_two() * v;
+            let y3 = r * (v - x3) - fp_two() * s1 * j;
+            let z3 = ((p.z + h) * (p.z + h) - z2z2 - h * h);
+            G1Jac { x: x3, y: y3, z: z3 }
+        }
+    }
+}
+
+/// Jacobian point doubling (used in scalar multiplication).
+pub fn double_g1_jac(p: G1Jac) -> G1Jac {
+    let a = p.x * p.x;
+    let b = p.y * p.y;
+    let c = b * b;
+    let d = fp_two() * ((p.x + b) * (p.x + b) - a - c);
+    let e = fp_three() * a;
+    let f = e * e;
+    let t = fp_two() * d;
+
+    let z3 = fp_two() * p.y * p.z;
+    let x3 = f - t;
+    let y3 = e * (d - x3) - fp_eight() * c;
+    G1Jac { x: x3, y: y3, z: z3 }
+}
+
+mod tests {
+    use crate::fp::{fp_from_limbs_checked, fp_one, fp_three, fp_two};
+    use super::{
+        add_g1_affine, add_g1_jac, add_g1_jac_mixed, double_g1_jac, g1_affine_infinity,
+        g1_jacobian_infinity, G1Affine, G1Jac, is_on_curve_g1_affine, jacobian_to_affine_g1,
+        neg_g1_affine,
+    };
+
+    fn generator() -> G1Affine {
+        G1Affine { x: fp_one(), y: fp_two() }
+    }
+
+    // 2G for G = (1, 2) on y^2 = x^3 + 3, the value every BN254 implementation
+    // (EIP-196 test vectors included) reports.
+    fn twice_generator() -> G1Affine {
+        G1Affine {
+            x: fp_from_limbs_checked([
+                0x7816a916871ca8d3c208c16d87cfd3,
+                0x44e72e131a029b85045b68181585d9,
+                0x306,
+            ]),
+            y: fp_from_limbs_checked([
+                0xa6a449e3538fc7ff3ebf7a5a18a2c4,
+                0x738c0e0a7c92e7845f96b2ae9c0a68,
+                0x15ed,
+            ]),
+        }
+    }
+
+    fn same(a: G1Affine, b: G1Affine) -> bool {
+        (a.x == b.x) & (a.y == b.y)
+    }
+
+    #[test]
+    fn curve_membership_accepts_generator_and_rejects_off_curve_point() {
+        assert(is_on_curve_g1_affine(generator()));
+        assert(is_on_curve_g1_affine(twice_generator()));
+        assert(is_on_curve_g1_affine(g1_affine_infinity()));
+        assert(!is_on_curve_g1_affine(G1Affine { x: fp_one(), y: fp_three() }));
+    }
+
+    #[test]
+    fn affine_addition_handles_doubling_opposites_and_infinity() {
+        let g = generator();
+        let inf = g1_affine_infinity();
+        assert(same(add_g1_affine(g, g), twice_generator()));
+        assert(add_g1_affine(g, neg_g1_affine(g)).is_infinity());
+        assert(same(add_g1_affine(g, inf), g));
+        assert(same(add_g1_affine(inf, g), g));
+        // 2G + G and G + 2G take the distinct-x branch and must agree.
+        let three = add_g1_affine(twice_generator(), g);
+        assert(is_on_curve_g1_affine(three));
+        assert(same(three, add_g1_affine(g, twice_generator())));
+    }
+
+    #[test]
+    fn jacobian_operations_agree_with_affine_addition() {
+        let g = generator();
+        let gj = G1Jac { x: g.x, y: g.y, z: fp_one() };
+        let two = double_g1_jac(gj);
+        assert(same(jacobian_to_affine_g1(two), twice_generator()));
+        let three = add_g1_affine(twice_generator(), g);
+        assert(same(jacobian_to_affine_g1(add_g1_jac(two, gj)), three));
+        assert(same(jacobian_to_affine_g1(add_g1_jac_mixed(two, g)), three));
+        // Equal operands fall back to doubling; opposite operands give infinity.
+        assert(same(jacobian_to_affine_g1(add_g1_jac(gj, gj)), twice_generator()));
+        assert(
+            same(
+                jacobian_to_affine_g1(add_g1_jac_mixed(gj, g)),
+                twice_generator(),
+            ),
+        );
+        assert(add_g1_jac_mixed(gj, neg_g1_affine(g)).is_infinity());
+        assert(
+            same(
+                jacobian_to_affine_g1(add_g1_jac(g1_jacobian_infinity(), gj)),
+                g,
+            ),
+        );
+    }
+}

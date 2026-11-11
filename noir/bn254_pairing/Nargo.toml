@@ -1,0 +1,11 @@
+[package]
+name = "bn254_pairing"
+type = "lib"
+authors = ["Michael Connor"]
+compiler_version = ">=1.0.0"
+
+[dependencies]
+fields = { path = "../bn254_fields" }
+curve_g1 = { path = "../bn254_g1" }
+curve_g2 = { path = "../bn254_g2" }
+bignum = { path = "../internal/bignum" }

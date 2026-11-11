@@ -1,0 +1,28 @@
+{
+  "protocol": "groth16",
+  "curve": "bn254",
+  "circuit": "product = a * b",
+  "publicInputs": [
+    "product"
+  ],
+  "expectedPublicInputs": [
+    "33"
+  ],
+  "setup": "TEST ONLY: locally generated; no production trust claim",
+  "reproducibility": "Not reproducible: the setup and proof bytes are randomized. Vendored; see Sources in the library README.",
+  "versions": {
+    "node": "v24.12.0",
+    "circom2": "0.2.23",
+    "circomCompiler": "2.2.3",
+    "snarkjs": "0.7.6"
+  },
+  "sha256": {
+    "multiplier.circom": "6a5f2d08ca40c9e1e338a7ddcf066141f35c46b0038f2ba67139f18c9ce2c626",
+    "proof.json": "b6d69761d219d0968f4d0ebc396ef89bef5e35ef2f05e512a108fff60fde441a",
+    "verification_key.json": "78ad48ef2a072546f027333f099869c6f5a86042859f066d27acede0dc1f8362"
+  },
+  "input": {
+    "a": "3",
+    "b": "11"
+  }
+}

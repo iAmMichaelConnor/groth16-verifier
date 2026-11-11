@@ -1,0 +1,12 @@
+[package]
+name = "bn254_pairing_checks"
+type = "lib"
+authors = ["Michael Connor"]
+compiler_version = ">=1.0.0"
+
+[dependencies]
+fields = { path = "../bn254_fields" }
+g2 = { path = "../bn254_g2" }
+bignum = { path = "../internal/bignum" }
+packing = { path = "../internal/transcript_packing" }
+poseidon = { tag = "v0.4.0", git = "https://github.com/noir-lang/poseidon" }

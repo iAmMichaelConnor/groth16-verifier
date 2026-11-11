@@ -1,0 +1,15 @@
+[package]
+name = "groth16"
+type = "lib"
+authors = ["Michael Connor"]
+compiler_version = ">=1.0.0"
+
+[dependencies]
+noir_bn254_pairing = { path = "../bn254_pairing" }
+fields = { path = "../bn254_fields" }
+g1 = { path = "../bn254_g1" }
+g2 = { path = "../bn254_g2" }
+pairing_checks = { path = "../bn254_pairing_checks" }
+bigcurve = { path = "../internal/bigcurve_fixed" }
+bignum = { path = "../internal/bignum" }
+fixed_g1_helpers = { path = "../internal/fixed_g1_helpers" }

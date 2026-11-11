@@ -1,0 +1,8 @@
+[package]
+name = "fixed_g1_helpers"
+type = "lib"
+authors = ["Michael Connor"]
+compiler_version = ">=1.0.0"
+
+[dependencies]
+bignum = { path = "../bignum" }
