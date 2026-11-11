@@ -213,7 +213,10 @@ circuit (library sources, the workspace manifest, the report scripts or the
 workflow itself); every push to `main` runs it.
 
 `bn254_fields`, `bn254_g1`, `bn254_g2`, `runtime_verifier` and `sp1` each have a
-`benchmarks.nr` module of `#[export]` functions. See the README for the command;
+`benchmarks.nr` module of `#[export]` functions, and so does
+`tests/fixed_multiplier_vector`, which holds the benchmark of the fixed-key
+verifier under an ordinary Circom key because the key is generated there. See
+the README for the command;
 the benchmark workflow posts the gate diff on pull requests and records history
 on the `gh-pages` branch, which must exist before the first workflow run.
 Locally the export took 7 minutes and the largest single export peaked at 7.5

@@ -9,6 +9,7 @@ on:
   pull_request:
     paths:
       - "noir/**"
+      - "tests/**"
       - "Nargo.toml"
       - "scripts/build-gates-report.sh"
       - ".github/workflows/benchmark.yml"

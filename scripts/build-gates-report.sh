@@ -4,7 +4,7 @@
 #
 #   ./scripts/build-gates-report.sh [--jobs N] [package...]
 #
-# Without packages, every package with a src/benchmarks.nr is exported. Exports
+# Without packages, every noir/ and tests/ package with a src/benchmarks.nr is exported. Exports
 # and `bb gates` run N at a time (default: the number of cores); each export
 # compiles its package single-threaded, so concurrency is what makes this fast.
 set -eu
@@ -24,7 +24,7 @@ done
 root="$(cd "$(dirname "$0")/.." && pwd)"
 cd "$root"
 if [[ ${#packages[@]} -eq 0 ]]; then
-    for benchmarks in noir/*/src/benchmarks.nr; do
+    for benchmarks in noir/*/src/benchmarks.nr tests/*/src/benchmarks.nr; do
         packages+=("$(basename "$(dirname "$(dirname "$benchmarks")")")")
     done
 fi

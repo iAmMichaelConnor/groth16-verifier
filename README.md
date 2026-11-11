@@ -204,7 +204,7 @@ proof bytes and prepares the hints.
 
 Circuit size (`bb gates` `circuit_size`, before power-of-two padding) of each
 `#[export]` benchmark function, measured with Noir 1.0.0 and bb 6.0.0 on
-2026-11-10 (`sp1_v6_verify` on 2026-11-11). The arithmetic rows include range
+2026-11-10 (`groth16_verify_1` and `sp1_v6_verify` on 2026-11-11). The arithmetic rows include range
 checks on their inputs and outputs and the backend's fixed per-circuit cost, so
 they are not additive.
 The [benchmark workflow](.github/workflows/benchmark.yml) reports current
@@ -212,6 +212,7 @@ numbers on every pull request and records history on the `gh-pages` branch.
 
 | Benchmark | Operation | Circuit size |
 | --- | --- | ---: |
+| `groth16_verify_1` | Fixed-key verification, Circom key, 1 public input | 188,966 |
 | `sp1_verify` | Fixed-key verification, SP1 v5 key, 2 public inputs | 216,777 |
 | `sp1_v6_verify` | Fixed-key verification, SP1 v6 key, 5 public inputs | 300,213 |
 | `runtime_verify_1` | Runtime-key verification, 1 public input | 438,862 |
